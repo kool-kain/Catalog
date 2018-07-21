@@ -91,6 +91,7 @@ public class ColectagAdmin extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Integer results = flickrControllerService.searchByTagAndPersist(textTag.getText());
+					//si 0, mensaje de 0 resultados, si >0, mensaje de x resultado
 				} catch(NullPointerException exp) {
 					//plantar jdialog para avisar de que debe rellenar texto
 					exp.printStackTrace();

@@ -24,7 +24,8 @@ public class FlickrPersistenceRepositoryAdapter implements FlickrPersistenceRepo
 	
 	public void putPhotographs(PhotoList<Photo> listPhoto, String tag) {		
 		flickrDao.putPhotographs(listPhoto.stream()
-				.map(photo -> PhotoFlickrConverterToPhotoDto(photo, tag)).collect(Collectors.toList()));
+				.map(photo -> PhotoFlickrConverterToPhotoDto(photo, tag))
+				.limit(listPhoto.getPerPage()).collect(Collectors.toList()));
 	}
 
 	private PhotoDto PhotoFlickrConverterToPhotoDto(Photo photo, String tag) {

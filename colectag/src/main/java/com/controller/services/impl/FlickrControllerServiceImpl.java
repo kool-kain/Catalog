@@ -30,8 +30,9 @@ public class FlickrControllerServiceImpl implements FlickrControllerService{
 	
 	@Override
 	public Integer searchByTagAndPersist(String tag) {
-		getFromAPI(tag);
-		return null;
+		PhotoList<Photo> listPhotoFlickr =  getFromAPI(tag);
+		persistData(listPhotoFlickr, tag);
+		return listPhotoFlickr.size();
 	}
 	
 	private PhotoList<Photo> getFromAPI(String tag) {
@@ -52,6 +53,8 @@ public class FlickrControllerServiceImpl implements FlickrControllerService{
 	}
 
 	private void persistData(PhotoList<Photo> listData, String tag) {
-		flickrPersistenceRepository.putPhotographs(listData, tag);
+		if(!listData.isEmpty()) {
+			flickrPersistenceRepository.putPhotographs(listData, tag);
+		}
 	}
 }
