@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+    
+	<jdbc:embedded-database id="dbDataSource" type="H2">
+		<jdbc:script location="classpath:/schemas/flickr-schema.sql"/>
+	</jdbc:embedded-database>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <property name="dataSource" ref="dbDataSource" />
+    </bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dbDataSource"/>
+		<property name="configLocation" value="mybatis-config.xml"/>
+	</bean>
+
+       		
+<!--  
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+    	<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:chDB"/>
+    	<property name="username" value="javauser" />
+    	<property name="password" value="javadude" />
+    </bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dbDataSource"/>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
+	</bean>
+	
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+  	<bean id="dbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">
+		<property name="jndiName" value="java:comp/env/jdbc/ChallDB" />
+		<property name="resourceRef" value="true" />
+	</bean>
+	
+	<jee:jndi-lookup id="dbDataSource"
+   		jndi-name="java:comp/env/jdbc/ChallDB"
+   		resource-ref="true"/>
+
+    <bean id="dbDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+    	<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:chDB"/>
+    	<property name="username" value="javauser" />
+    	<property name="password" value="javadude" />
+    </bean>
+       		
+	<bean id="dbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="jdbc/ChallDB"/>
+    </bean>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <property name="dataSource" ref="dbDataSource" />
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+      <property name="dataSource" ref="dbDataSource" />
+      <property name="typeAliasesPackage" value="com.example.model"/>
+      <property name="mapperLocations" value="classpath*:*mapper.xml" />
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       <property name="basePackage" value="com.example.dao" />
+       
+       	<mybatis:scan base-package="com.persistence.mybatis.daos"
+		annotation="org.apache.ibatis.annotations.Mapper"/>
+    </bean> !> -->
+    
+    <mybatis:scan base-package="com.persistence.mybatis.daos"
+		annotation="org.apache.ibatis.annotations.Mapper"/>
+</beans>
