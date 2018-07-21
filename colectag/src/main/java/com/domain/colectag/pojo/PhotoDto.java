@@ -2,20 +2,19 @@ package com.domain.colectag.pojo;
 
 import java.io.Serializable;
 
-public class Photo implements Serializable{
+public class PhotoDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private Long id;
+	private String id;
 	private String tag;
-	private String owner;
 	private String secret;
-	private Integer server;
+	private String server;
 	private String title;
 	
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getTag() {
@@ -24,22 +23,16 @@ public class Photo implements Serializable{
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-	public String getOwner() {
-		return owner;
-	}
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
 	public String getSecret() {
 		return secret;
 	}
 	public void setSecret(String secret) {
 		this.secret = secret;
 	}
-	public Integer getServer() {
+	public String getServer() {
 		return server;
 	}
-	public void setServer(Integer server) {
+	public void setServer(String server) {
 		this.server = server;
 	}
 	public String getTitle() {

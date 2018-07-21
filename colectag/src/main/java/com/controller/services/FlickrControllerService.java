@@ -1,9 +1,10 @@
 package com.controller.services;
 
-import java.util.List;
-
+/**
+ * Search photos by tag in Flickr with its API and then persist data retrieved
+ * @author Dani
+ *
+ */
 public interface FlickrControllerService {
-	List<String> getFromAPI(String tag);
-	
-	int persistData(List<String> listData);
+	Integer searchByTagAndPersist(String tag);
 }

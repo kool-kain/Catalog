@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.persistence.mybatis.daos.FlickrDao">
+	<!--    result maps     -->
+	<resultMap id="photoMap" type="com.domain.colectag.pojo.PhotoDto" >
+		<id column="id" property="id"  />
+		<id column="tag" property="tag"/>
+		<result column="secret" property="secret" />
+		<result column="server" property="server" />
+		<result column="title" property="title" />
+	</resultMap>
+
+	<select id="getPhotographs" resultMap="photoMap" parameterType="String">
+		SELECT id,tag,secret,server,title
+		FROM FLICKR
+		WHERE ID in
+	 	 <foreach item="item" index="index" collection="listID"
+      		open="(" separator="," close=")">
+				#{item}
+			</foreach>
+	</select>
+   
+   <insert id="putPhotographs" parameterType="java.util.List">
+		INSERT INTO FLICKR (id,tag,secret,server,title)
+        VALUES
+        <foreach collection="listPhoto" item="element" index="index" open="(" separator="),("  close=")">
+		#{element.id},
+		#{element.tag},
+     	#{element.secret},
+     	#{element.server},
+     	#{element.title}
+       </foreach>
+    </insert>
+</mapper>

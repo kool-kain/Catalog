@@ -14,19 +14,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.domain.colectag.pojo.Photo;
+import com.domain.colectag.pojo.PhotoDto;
 import com.persistence.mybatis.daos.FlickrDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = 
 { "classpath:applicationContext-test.xml" })
 public class FlickrDaoTest extends AbstractTransactionalJUnit4SpringContextTests{
-	private static final Long ID1 = 1L;
-	private static final Long ID2 = 2L;
+	private static final String ID1 = "1";
+	private static final String ID2 = "2";
 	private static final String TAG = "cool";
-	private static final String OWNER = "Daniel";
 	private static final String SECRET = "098a9";
-	private static final Integer SERVER = 1;
+	private static final String SERVER = "1";
 	private static final String TITLE = "MyPhoto";
 	
 	@Autowired
@@ -35,11 +34,11 @@ public class FlickrDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 	@Test
 	public void insert_and_get_photo_test() {
 		
-		List<Photo> listPhoto = getPhotoList(2);
+		List<PhotoDto> listPhoto = getPhotoList(2);
 		flickrDao.putPhotographs(listPhoto);
 		
-		List<Photo> listPhotoDto =
-				flickrDao.getPhotographs(listPhoto.stream().map(Photo::getId).collect(Collectors.toList()));
+		List<PhotoDto> listPhotoDto =
+				flickrDao.getPhotographs(listPhoto.stream().map(PhotoDto::getId).collect(Collectors.toList()));
 		Assert.assertNotNull(listPhotoDto);
 		Assert.assertThat(listPhotoDto.size(), is(2));
 		Assert.assertThat(listPhotoDto.get(0).getId(), is(ID1));
@@ -48,15 +47,14 @@ public class FlickrDaoTest extends AbstractTransactionalJUnit4SpringContextTests
 		Assert.assertThat(listPhotoDto.get(1).getTag(), is(TAG+1));
 	}
 	
-	private List<Photo> getPhotoList(Integer quantity){
-		List<Photo> listPhoto = new ArrayList<>();
+	private List<PhotoDto> getPhotoList(Integer quantity){
+		List<PhotoDto> listPhoto = new ArrayList<>();
 		
 		for(int i = 0; i<quantity; i++) {
-			Photo photo = new Photo();
+			PhotoDto photo = new PhotoDto();
 			
-			photo.setId(Integer.toUnsignedLong(i+1));
+			photo.setId(Integer.toString(i + 1));
 			photo.setTag(TAG+i);
-			photo.setOwner(OWNER);
 			photo.setSecret(SECRET);
 			photo.setServer(SERVER);
 			photo.setTitle(TITLE);
