@@ -2,12 +2,12 @@ package com.controller.services.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.controller.services.FlickrControllerService;
-import com.domain.colectag.pojo.PhotoDto;
 import com.domain.colectag.repositories.FlickrPersistenceRepository;
 import com.flickr4java.flickr.Flickr;
 import com.flickr4java.flickr.FlickrException;
@@ -22,16 +22,22 @@ public class FlickrControllerServiceImpl implements FlickrControllerService{
 	private final static Logger LOGGER = Logger.getLogger(FlickrControllerServiceImpl.class);
 	private final static String SECRET = "cbdfff3ca21a65d0";
 	private final static String API_KEY = "4af67866a51e5eec6d30de49e7ea3388";
-	private final static Integer RESULTS_PER_PAGE = 25;
+	private final static Integer RESULTS_PER_PAGE = 150;
 	private final static Integer DESIRED_PAGES = 1;
+	private final static String COMMA = ",";
 	
 	@Autowired
 	private FlickrPersistenceRepository flickrPersistenceRepository;
 	
 	@Override
 	public Integer searchByTagAndPersist(String tag) {
-		PhotoList<Photo> listPhotoFlickr =  getFromAPI(tag);
-		persistData(listPhotoFlickr, tag);
+		if(null == tag || tag.isEmpty()) {
+			return 0;
+		}
+		
+		String validateTag = validateTag(tag);
+		PhotoList<Photo> listPhotoFlickr =  getFromAPI(validateTag);
+		persistData(listPhotoFlickr, validateTag);
 		return listPhotoFlickr.size();
 	}
 	
@@ -50,6 +56,17 @@ public class FlickrControllerServiceImpl implements FlickrControllerService{
 		}
 		
 		return photoList;
+	}
+
+	private String validateTag(String tag) {
+		if(StringUtils.containsWhitespace(tag)) {
+			String validateTag = StringUtils.EMPTY;
+			for(String subTag : StringUtils.split(tag, StringUtils.SPACE)){
+				validateTag += subTag + COMMA;
+			}
+			return StringUtils.substring(validateTag, 0, validateTag.length() -1);
+		}
+		return tag;
 	}
 
 	private void persistData(PhotoList<Photo> listData, String tag) {

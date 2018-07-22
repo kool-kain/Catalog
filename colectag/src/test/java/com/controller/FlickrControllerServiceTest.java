@@ -24,11 +24,14 @@ import com.flickr4java.flickr.photos.PhotoList;
 @RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(locations = 
 { "classpath:applicationContext-test.xml" })
-public class FlickrControllerTest extends AbstractJUnit4SpringContextTests{
+public class FlickrControllerServiceTest extends AbstractJUnit4SpringContextTests{
 	private final static String TAG_OK = "summer";
+	private final static String MULTI_TAG_WITH_COMMAS = "beach,summer,sea";
+	private static final String MULTI_TAG_WITH_SPACES = "beach summer    sea";
 	private final static String TAG_NOK = "summerrtaljar";
-	private final static Integer RESULTS_PER_PAGE = 25;
+	private final static Integer RESULTS_PER_PAGE = 150;
 	private final static Integer DESIRED_PAGES = 1;
+
 	
 	@InjectMocks
 	@Spy
@@ -62,6 +65,28 @@ public class FlickrControllerTest extends AbstractJUnit4SpringContextTests{
 		Assert.assertThat(photoListCaptor.getValue().getPage(), is(DESIRED_PAGES));
 		Assert.assertThat(photoListCaptor.getValue().getPerPage(), is(RESULTS_PER_PAGE));
 		Assert.assertThat(tagCaptor.getValue(), is(TAG_OK));		
+	}
+	
+	@Test
+	public void searchByTagAndPersist_multiple_tags_test() throws FlickrException {
+		Mockito.doNothing().when(flickrPersistenceRepository).putPhotographs(Mockito.any(), Mockito.any());
+		
+		Assert.assertThat(flickrControllerService
+				.searchByTagAndPersist(MULTI_TAG_WITH_SPACES), is(RESULTS_PER_PAGE));
+		
+		Mockito.verify(flickrPersistenceRepository, Mockito.times(1))
+			.putPhotographs(photoListCaptor.capture(), tagCaptor.capture());
+		
+		photoListCaptor.getValue().forEach(photo -> {
+			Assert.assertNotNull(photo.getId());
+			Assert.assertNotNull(photo.getServer());
+			Assert.assertNotNull(photo.getTitle());
+			Assert.assertNotNull(photo.getId());
+			Assert.assertNotNull(photo.getTags());
+		});
+		Assert.assertThat(photoListCaptor.getValue().getPage(), is(DESIRED_PAGES));
+		Assert.assertThat(photoListCaptor.getValue().getPerPage(), is(RESULTS_PER_PAGE));
+		Assert.assertThat(tagCaptor.getValue(), is(MULTI_TAG_WITH_COMMAS));		
 	}
 	
 	@Test
