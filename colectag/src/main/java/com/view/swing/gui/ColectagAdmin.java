@@ -70,7 +70,7 @@ public class ColectagAdmin extends JFrame {
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		contentPane.add(splitPane, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("Tag Search");
+		JLabel lblNewLabel = new JLabel("Flickr Tag Search");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		splitPane.setLeftComponent(lblNewLabel);
 		
@@ -91,10 +91,17 @@ public class ColectagAdmin extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					Integer results = flickrControllerService.searchByTagAndPersist(textTag.getText());
-					//si 0, mensaje de 0 resultados, si >0, mensaje de x resultado
+					JDialogCustom info = new JDialogCustom(results);
+		                info.setModal(true);
+		                info.setVisible(true);
+		                
 				} catch(NullPointerException exp) {
-					//plantar jdialog para avisar de que debe rellenar texto
-					exp.printStackTrace();
+					JDialogCustom info = new JDialogCustom(-1);
+	                info.setModal(true);
+	                info.setVisible(true);
+
+				} catch(Exception exp) {
+					exp.printStackTrace();					
 				}
 			}
 		});
